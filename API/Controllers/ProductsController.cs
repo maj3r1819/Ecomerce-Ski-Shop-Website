@@ -9,9 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
 
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    
+    public class ProductsController : BaseApiController
     {
         private readonly StoreContext _context;
 
@@ -25,7 +24,10 @@ namespace API.Controllers
         //api/products/{id}
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            return await _context.Products.FindAsync(id);
+            var product =  await _context.Products.FindAsync(id);
+            if (product == null) return NotFound();
+            return product;
+
         }
         [HttpGet]
         // make this fn async because if we have only 1 thread and this fn takes 10 mins then it will block the server.
